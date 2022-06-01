@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+</style>
+</head>
+<body>
+
+<h2>Sales Report</h2>
+<form action='' method="post">
+    {% csrf_token %}
+<!--  <label form="months">Month:</label>-->
+  <select name="dropdown" id="m">
+    <option value="1">Jan</option>
+    <option value="2">Feb</option>
+    <option value="3">March</option>
+    <option value="4">April</option>
+    <option value="5">May</option>
+    <option value="6">June</option>
+      <option value="7">July</option>
+      <option value="8">August</option>
+      <option value="9">Sept</option>
+      <option value="10">Oct</option>
+      <option value="11">Nov</option>
+      <option value="12">Dec</option>
+  </select>
+    <input type="submit" value="Select">
+  <br><br>
+<a href="{% url 'chart' %}" class="btn btn-primary" role="button" data-bs-toggle="button">Chart</a>
+</div>
+    <br><br>
+</form>
+{% block content%}
+<table>
+  <tr>
+      <th>#</th>
+    <th>Product</th>
+    <th>Items sold</th>
+<!--    <th>total price</th>-->
+  </tr>
+    <tbody>
+   <tbody>
+    {% for product in products %}
+    <tr>
+        <td>{{forloop.counter}}</td>
+        <td>{{product.name}}</td>
+        <td>{{product.items_sold}}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+</body>
+</html>
+

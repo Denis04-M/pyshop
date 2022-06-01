@@ -1,0 +1,113 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block content %}
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="box-element">
+
+				<a  class="btn btn-outline-dark" href="{% url 'galaxy hotel' %}">&#x2190; Continue Shopping</a>
+
+				<br>
+				<br>
+				<table class="table">
+					<tr>
+						<th><h5>Items: <strong>{{order.get_cart_items}}</strong></h5></th>
+						<th><h5>Total:<strong> ksh. {{order.get_cart_total}}</strong></h5></th>
+						<form id="position-field">
+						<th class="position-form">
+						<div style="float:left;">
+								<input class="form-control" type="text" name="position" placeholder="Your sitting position">
+							</div>
+						<div style="float:left;">
+							<input class="form-control" type="text" name="phone" placeholder="Your phone number">
+								</div>
+						</th>
+							</form>
+						<th>
+							<input id="make-order" class="btn btn-success btn-block" type="submit" value="Order">
+						</th>
+					</tr>
+				</table>
+
+			</div>
+
+			<br>
+			{% for item in items %}
+			<div class="box-element">
+				<div class="cart-row">
+					<div style="flex:2"></div>
+					<div style="flex:2"><strong>Item</strong></div>
+					<div style="flex:1"><strong>Price</strong></div>
+					<div style="flex:1"><strong>Quantity</strong></div>
+					<div style="flex:1"><strong>Total</strong></div>
+				</div>
+
+				<div class="cart-row">
+					<div style="flex:2"><img class="row-image" src="{{item.product.imageUrl}}"></div>
+					<div style="flex:2"><p>{{item.product.name}}</p></div>
+					<div style="flex:1"><p>ksh. {{item.product.price}}</p></div>
+					<div style="flex:1">
+						<p class="quantity">{{item.quantity}}</p>
+						<div class="quantity">
+							<img data-product={{item.product.id}} data-action="add" class="chg-quantity update-cart" src="{% static  'images/arrow-up.png' %}">
+
+							<img data-product={{item.product.id}} data-action="remove" class="chg-quantity update-cart" src="{% static  'images/arrow-down.png' %}">
+						</div>
+					</div>
+					<div style="flex:1"><p>ksh. {{item.get_total}}</p></div>
+				</div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+<script type="text/javascript">
+<!--	function checkForm(){-->
+<!--		var f = document.forms['position-field'].element;-->
+<!--		var canSubmit = true;-->
+<!--		for(var i=0; i<f.length; i++){-->
+<!--		if(f[i].value.length==0)-->
+<!--		canSubmit=false;-->
+<!--		}-->
+<!--		if(canSubmit){-->
+<!--			documents.getElementById('make-order')-->
+<!--			disabled=false;-->
+<!--		}-->
+<!--		else{-->
+<!--			documents.getElementById('make-order')-->
+<!--			disabled=disabled;-->
+<!--		}-->
+<!--	}-->
+
+	var total = '{{order.get_cart_total}}'
+	var form = document.getElementById('position-field')
+	document.getElementById('make-order').addEventListener('click', function(e){
+		submitPosition()
+		})
+
+	function submitPosition(){
+		console.log('Payment will be processed')
+		var position = {
+			'position': form.position.value,
+			'phone': form.phone.value
+		}
+	var url = '/orders_placed/'
+	fetch(url,{
+		method:'POST',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':csrftoken,
+		},
+		body:JSON.stringify({'form':position})
+	})
+	.then((response) => response.json())
+	.then((data) => {
+		console.log('Success:', data);
+		alert('Order placed');
+		window.location.href = "{% url 'galaxy hotel' %}"
+			})
+	}
+</script>
+ <li class="nav-item">
+                <a class="nav-link" href="{% url 'shipping' %}">Remote order</a>
+            </li>
+{% endblock content %}
